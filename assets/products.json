@@ -1,0 +1,352 @@
+[
+    {
+      "id": 1,
+      "name": "Apple iPhone 14",
+      "quantity": 10,
+      "price": 1500,
+      "description": "Latest Apple smartphone with A15 Bionic chip"
+    },
+    {
+      "id": 2,
+      "name": "Samsung Galaxy S21",
+      "quantity": 8,
+      "price": 1200,
+      "description": "Flagship smartphone with powerful camera"
+    },
+    {
+      "id": 3,
+      "name": "Sony WH-1000XM4 Headphones",
+      "quantity": 15,
+      "price": 350,
+      "description": "Noise-canceling over-ear headphones"
+    },
+    {
+      "id": 4,
+      "name": "Apple MacBook Pro 13-inch",
+      "quantity": 5,
+      "price": 2000,
+      "description": "13-inch laptop with Apple M1 chip"
+    },
+    {
+      "id": 5,
+      "name": "Nike Air Max 270",
+      "quantity": 20,
+      "price": 150,
+      "description": "Comfortable sneakers for daily use"
+    },
+    {
+      "id": 6,
+      "name": "Adidas Ultraboost 21",
+      "quantity": 10,
+      "price": 180,
+      "description": "High-performance running shoes"
+    },
+    {
+      "id": 7,
+      "name": "LG 55-inch OLED TV",
+      "quantity": 7,
+      "price": 1200,
+      "description": "4K OLED TV with stunning picture quality"
+    },
+    {
+      "id": 8,
+      "name": "Canon EOS 5D Mark IV Camera",
+      "quantity": 3,
+      "price": 2500,
+      "description": "Full-frame DSLR with 4K video"
+    },
+    {
+      "id": 9,
+      "name": "Amazon Echo Dot 4th Gen",
+      "quantity": 30,
+      "price": 50,
+      "description": "Smart speaker with Alexa"
+    },
+    {
+      "id": 10,
+      "name": "Microsoft Surface Pro 7",
+      "quantity": 4,
+      "price": 1200,
+      "description": "Portable 2-in-1 laptop/tablet"
+    },
+    {
+      "id": 11,
+      "name": "HP Spectre x360",
+      "quantity": 6,
+      "price": 1500,
+      "description": "Convertible laptop with 360-degree hinge"
+    },
+    {
+      "id": 12,
+      "name": "Bose QuietComfort 35 II",
+      "quantity": 12,
+      "price": 300,
+      "description": "Wireless noise-canceling headphones"
+    },
+    {
+      "id": 13,
+      "name": "Fitbit Charge 4",
+      "quantity": 25,
+      "price": 100,
+      "description": "Fitness tracker with GPS and heart rate monitoring"
+    },
+    {
+      "id": 14,
+      "name": "Samsung Galaxy Watch 4",
+      "quantity": 9,
+      "price": 250,
+      "description": "Smartwatch with fitness tracking and ECG"
+    },
+    {
+      "id": 15,
+      "name": "Nike Air Force 1",
+      "quantity": 18,
+      "price": 120,
+      "description": "Iconic basketball sneakers"
+    },
+    {
+      "id": 16,
+      "name": "Rolex Submariner Watch",
+      "quantity": 2,
+      "price": 8500,
+      "description": "Luxury watch with water resistance"
+    },
+    {
+      "id": 17,
+      "name": "Fossil Hybrid HR Smartwatch",
+      "quantity": 11,
+      "price": 180,
+      "description": "Hybrid smartwatch with heart rate tracking"
+    },
+    {
+      "id": 18,
+      "name": "Dyson V11 Vacuum Cleaner",
+      "quantity": 5,
+      "price": 600,
+      "description": "Cordless vacuum cleaner with powerful suction"
+    },
+    {
+      "id": 19,
+      "name": "iRobot Roomba 980",
+      "quantity": 6,
+      "price": 900,
+      "description": "Smart robotic vacuum cleaner"
+    },
+    {
+      "id": 20,
+      "name": "Philips Sonicare Electric Toothbrush",
+      "quantity": 30,
+      "price": 100,
+      "description": "Electric toothbrush with pressure sensor"
+    },
+    {
+      "id": 21,
+      "name": "Nespresso VertuoPlus Coffee Maker",
+      "quantity": 7,
+      "price": 150,
+      "description": "Coffee machine with multiple brewing options"
+    },
+    {
+      "id": 22,
+      "name": "Apple Watch Series 7",
+      "quantity": 10,
+      "price": 400,
+      "description": "Smartwatch with ECG and fitness tracking"
+    },
+    {
+      "id": 23,
+      "name": "Garmin Forerunner 945",
+      "quantity": 8,
+      "price": 600,
+      "description": "GPS smartwatch for fitness and multisport tracking"
+    },
+    {
+      "id": 24,
+      "name": "Echo Show 8",
+      "quantity": 20,
+      "price": 130,
+      "description": "Smart display with Alexa"
+    },
+    {
+      "id": 25,
+      "name": "Sony PlayStation 5",
+      "quantity": 3,
+      "price": 500,
+      "description": "Next-generation gaming console"
+    },
+    {
+      "id": 26,
+      "name": "Samsung 32-inch Curved Monitor",
+      "quantity": 6,
+      "price": 300,
+      "description": "32-inch curved monitor with QHD resolution"
+    },
+    {
+      "id": 27,
+      "name": "Xiaomi Mi Band 6",
+      "quantity": 40,
+      "price": 50,
+      "description": "Fitness tracker with AMOLED display"
+    },
+    {
+      "id": 28,
+      "name": "Bose SoundLink Revolve+ Bluetooth Speaker",
+      "quantity": 8,
+      "price": 400,
+      "description": "Portable Bluetooth speaker with 360-degree sound"
+    },
+    {
+      "id": 29,
+      "name": "Seiko 5 Automatic Watch",
+      "quantity": 14,
+      "price": 120,
+      "description": "Affordable automatic watch with classic design"
+    },
+    {
+      "id": 30,
+      "name": "Dyson Airwrap Styler",
+      "quantity": 4,
+      "price": 550,
+      "description": "Hair styling tool with multiple attachments"
+    },
+    {
+      "id": 31,
+      "name": "JBL Flip 5 Bluetooth Speaker",
+      "quantity": 20,
+      "price": 100,
+      "description": "Portable waterproof Bluetooth speaker"
+    },
+    {
+      "id": 32,
+      "name": "Samsung Galaxy Tab S7",
+      "quantity": 5,
+      "price": 650,
+      "description": "Android tablet with high resolution display"
+    },
+    {
+      "id": 33,
+      "name": "Apple AirPods Pro",
+      "quantity": 25,
+      "price": 250,
+      "description": "Wireless noise-canceling earbuds"
+    },
+    {
+      "id": 34,
+      "name": "Huawei Mate 40 Pro",
+      "quantity": 3,
+      "price": 1400,
+      "description": "Flagship smartphone with excellent camera"
+    },
+    {
+      "id": 35,
+      "name": "LG 27-inch UltraGear Monitor",
+      "quantity": 6,
+      "price": 350,
+      "description": "27-inch gaming monitor with high refresh rate"
+    },
+    {
+      "id": 36,
+      "name": "Anker PowerCore 20000mAh Power Bank",
+      "quantity": 30,
+      "price": 50,
+      "description": "High-capacity portable charger"
+    },
+    {
+      "id": 37,
+      "name": "Oculus Quest 2 VR Headset",
+      "quantity": 4,
+      "price": 300,
+      "description": "Standalone VR headset for immersive gaming"
+    },
+    {
+      "id": 38,
+      "name": "Microsoft Xbox Series X",
+      "quantity": 3,
+      "price": 500,
+      "description": "High-performance gaming console"
+    },
+    {
+      "id": 39,
+      "name": "Logitech MX Master 3 Mouse",
+      "quantity": 15,
+      "price": 100,
+      "description": "Ergonomic wireless mouse with customizable buttons"
+    },
+    {
+      "id": 40,
+      "name": "Razer BlackWidow V3 Mechanical Keyboard",
+      "quantity": 8,
+      "price": 130,
+      "description": "Mechanical keyboard with RGB lighting"
+    },
+    {
+      "id": 41,
+      "name": "TCL 55-inch 4K TV",
+      "quantity": 10,
+      "price": 400,
+      "description": "55-inch smart 4K television"
+    },
+    {
+      "id": 42,
+      "name": "Sennheiser Momentum 3 Headphones",
+      "quantity": 5,
+      "price": 400,
+      "description": "Premium noise-canceling over-ear headphones"
+    },
+    {
+      "id": 43,
+      "name": "Bose Soundbar 700",
+      "quantity": 6,
+      "price": 800,
+      "description": "High-end soundbar with Alexa integration"
+    },
+    {
+      "id": 44,
+      "name": "Samsung Galaxy Z Fold 3",
+      "quantity": 2,
+      "price": 1800,
+      "description": "Foldable smartphone with flexible display"
+    },
+    {
+      "id": 45,
+      "name": "Sony A7 III Camera",
+      "quantity": 3,
+      "price": 2000,
+      "description": "Full-frame mirrorless camera with high resolution"
+    },
+    {
+      "id": 46,
+      "name": "Bose Home Speaker 500",
+      "quantity": 4,
+      "price": 450,
+      "description": "Smart speaker with powerful sound"
+    },
+    {
+      "id": 47,
+      "name": "Apple iPad Pro 12.9-inch",
+      "quantity": 6,
+      "price": 1100,
+      "description": "12.9-inch tablet with Apple M1 chip"
+    },
+    {
+      "id": 48,
+      "name": "Garmin Fenix 6 Pro",
+      "quantity": 5,
+      "price": 600,
+      "description": "GPS smartwatch for outdoor adventures"
+    },
+    {
+      "id": 49,
+      "name": "Fitbit Versa 3",
+      "quantity": 20,
+      "price": 230,
+      "description": "Smartwatch with fitness tracking"
+    },
+    {
+      "id": 50,
+      "name": "Sony PlayStation 4 Pro",
+      "quantity": 10,
+      "price": 400,
+      "description": "Advanced gaming console with 4K gaming"
+    }
+  ]
