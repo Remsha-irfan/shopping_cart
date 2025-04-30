@@ -1,9 +1,8 @@
 import 'dart:developer';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:shopping_cart/core/error/error.dart';
 import 'package:shopping_cart/feature/data/data_source/cart_local_datasource.dart';
-import 'package:shopping_cart/feature/domain/usecase/get_all_product_usecase.dart';
+import 'package:shopping_cart/feature/data/repository/cart_repo.dart';
 import 'package:shopping_cart/feature/presentation/getx_controller/product_controller.dart';
 import '../../data/model/product_model.dart';
 
@@ -11,36 +10,19 @@ class CartController extends GetxController {
   final RxList<ProductModel> productList = <ProductModel>[].obs;
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
-  final RxDouble scrollPosition = 0.0.obs;
 
-  late ScrollController scrollController;
   final RxDouble total = 0.0.obs;
   final RxDouble discount = 0.0.obs;
 
-  final CartLocalDataSource cartLocalDataSource;
-  final GetAllProductsUseCase getAllProductsUseCase;
-  CartController(
-    this.getAllProductsUseCase, {
-    required this.cartLocalDataSource,
-  });
+  // final CartLocalDataSource cartLocalDataSource;
+  final CartRepository cartRepository;
+  CartController({required this.cartRepository});
 
   @override
   void onInit() {
     super.onInit();
     loadCartItems();
-    // ever(productList, (_) => _calculateTotals()); // auto update total/discount
-    scrollController = ScrollController();
-    ever(productList, (_) {
-      _calculateTotals();
-      Future.delayed(Duration(milliseconds: 100), () {
-        scrollController.jumpTo(scrollPosition.value);
-      });
-    });
-
-    // Save current scroll position as user scrolls
-    scrollController.addListener(() {
-      scrollPosition.value = scrollController.position.pixels;
-    });
+    ever(productList, (_) => _calculateTotals()); // auto update total/discount
   }
 
   // Load cart items from local database
@@ -48,9 +30,14 @@ class CartController extends GetxController {
     try {
       isLoading.value = true;
 
-      var items = await cartLocalDataSource.getCartItems();
+      // var items = await cartLocalDataSource.getCartItems();
 
-      productList.value = items;
+      // productList.value = items;
+      final result = await cartRepository.getCartItems();
+      result.fold(
+        (failure) => errorMessage.value = failure.message,
+        (items) => productList.value = items,
+      );
 
       _calculateTotals();
     } catch (e) {
@@ -60,6 +47,7 @@ class CartController extends GetxController {
     }
   }
 
+  // calculate discount
   void _calculateTotals() {
     double tempTotal = 0.0;
     for (var item in productList) {
@@ -69,6 +57,7 @@ class CartController extends GetxController {
     discount.value = tempTotal > 500 ? tempTotal * 0.10 : 0.0;
   }
 
+  // add item into the cart
   void addToCart(ProductModel product) {
     try {
       bool exists = productList.any((item) => item.id == product.id);
@@ -77,10 +66,10 @@ class CartController extends GetxController {
           (item) => item.id == product.id,
         );
         existingProduct.cartQuantity += 1;
-        cartLocalDataSource.saveCartItem(existingProduct);
+        cartRepository.saveCartItem(existingProduct);
       } else {
         product.cartQuantity = 1;
-        cartLocalDataSource.saveCartItem(product);
+        cartRepository.saveCartItem(product);
         productList.add(product);
       }
       productList.refresh();
@@ -90,10 +79,11 @@ class CartController extends GetxController {
     }
   }
 
+  // remove item from the cart
   void removeFromCart(ProductModel product) {
     try {
       productList.remove(product);
-      cartLocalDataSource.deleteCartItem(product.id);
+      cartRepository.deleteCartItem(product.id);
       _calculateTotals();
     } catch (e) {
       errorMessage.value = GeneralFailure(e.toString()).message;
@@ -102,10 +92,20 @@ class CartController extends GetxController {
 
   void increaseQuantity(ProductModel product) {
     try {
-      product.cartQuantity += 1;
-      cartLocalDataSource.saveCartItem(product);
-      productList.refresh();
-      _calculateTotals();
+      if (product.cartQuantity < product.quantity) {
+        product.cartQuantity += 1;
+        cartRepository.saveCartItem(product);
+        productList.refresh();
+        _calculateTotals();
+      } else {
+        errorMessage.value = "Maximum stock reached";
+
+        Get.snackbar(
+          "Stock Limit",
+          "You can't add more than available stock",
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
     } catch (e) {
       errorMessage.value = GeneralFailure(e.toString()).message;
     }
@@ -116,10 +116,10 @@ class CartController extends GetxController {
       if (product.cartQuantity > 1) {
         product.cartQuantity -= 1;
 
-        cartLocalDataSource.saveCartItem(product);
+        cartRepository.saveCartItem(product);
       } else {
         productList.removeWhere((item) => item.id == product.id);
-        cartLocalDataSource.deleteCartItem(product.id);
+        cartRepository.deleteCartItem(product.id);
       }
       productList.refresh();
       _calculateTotals();
@@ -140,16 +140,13 @@ class CartController extends GetxController {
           "🛒 Product: ${item.name}, Stock after purchase: ${item.quantity}, Purchased: ${item.cartQuantity}",
         );
 
-        // Reset cartQuantity after purchase
         item.cartQuantity = 0;
 
-        // ✅ Update local DB with new stock
-        await cartLocalDataSource.saveCartItem(item);
+        await cartRepository.saveCartItem(item);
 
-        // 🗑️ Remove product from cart (optional: you could filter by cartQuantity == 0 later)
-        await cartLocalDataSource.deleteCartItem(item.id);
+        await cartRepository.deleteCartItem(item.id);
 
-        log("✅ ${item.name} updated & removed from cart");
+        log(" ${item.name} updated & removed from cart");
       }
 
       productList.clear();
@@ -157,8 +154,8 @@ class CartController extends GetxController {
 
       Get.find<ProductController>().loadProducts();
 
-      // ✅ Navigate to confirmation screen
-      Get.offNamed('/confirmation');
+      //  Navigate to confirmation screen
+      Get.offAllNamed('/confirmation');
     } catch (e) {
       errorMessage.value = GeneralFailure(e.toString()).message;
     } finally {

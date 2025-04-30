@@ -9,7 +9,7 @@ import 'package:shopping_cart/feature/presentation/getx_controller/cart_controll
 
 class CartScreen extends StatelessWidget {
   final cartController = Get.find<CartController>();
-  // final ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   CartScreen({super.key});
 
@@ -43,7 +43,7 @@ class CartScreen extends StatelessWidget {
           children: [
             Expanded(
               child: ListView.builder(
-                controller: cartController.scrollController,
+                controller: _scrollController,
                 itemCount: cartController.productList.length,
                 itemBuilder: (context, index) {
                   final item = cartController.productList[index];
@@ -113,7 +113,6 @@ class CartScreen extends StatelessWidget {
                         onPressed: () {
                           try {
                             cartController.placeOrder();
-                            Get.offAllNamed('/confirmation');
                           } catch (e) {
                             Get.snackbar(
                               "Error",
