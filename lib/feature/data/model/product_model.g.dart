@@ -19,26 +19,29 @@ class ProductModelAdapter extends TypeAdapter<ProductModel> {
     return ProductModel(
       id: fields[0] as int,
       name: fields[1] as String,
-      quantity: fields[2] as int,
-      price: fields[3] as double,
+      price: fields[2] as double,
+      quantity: fields[3] as int,
       description: fields[4] as String,
+      cartQuantity: fields[5] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, ProductModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.quantity)
-      ..writeByte(3)
       ..write(obj.price)
+      ..writeByte(3)
+      ..write(obj.quantity)
       ..writeByte(4)
-      ..write(obj.description);
+      ..write(obj.description)
+      ..writeByte(5)
+      ..write(obj.cartQuantity);
   }
 
   @override

@@ -6,20 +6,19 @@ import 'package:shopping_cart/core/common_widget/custom_text_style.dart';
 import 'package:shopping_cart/core/common_widget/sized_box.dart';
 import 'package:shopping_cart/core/constant/colors.dart';
 import 'package:shopping_cart/feature/presentation/getx_controller/cart_controller.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:shopping_cart/feature/presentation/getx_controller/cart_controller.dart';
 
 class CartScreen extends StatelessWidget {
   final cartController = Get.find<CartController>();
   final ScrollController _scrollController = ScrollController();
+
+  CartScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Cart")),
       body: Obx(() {
-        if (cartController.cartItems.isEmpty) {
+        if (cartController.productList.isEmpty) {
           return Center(child: Text("Cart is empty"));
         }
 
@@ -27,13 +26,21 @@ class CartScreen extends StatelessWidget {
           children: [
             Expanded(
               child: ListView.builder(
-                itemCount: cartController.cartItems.length,
+                itemCount: cartController.productList.length,
                 controller: _scrollController,
                 itemBuilder: (context, index) {
-                  final item = cartController.cartItems[index];
+                  final item = cartController.productList[index];
                   return ListTile(
+                    leading: CustomText(
+                      text: "Remaining ${item.quantity}",
+                      style: CustomTextStyles.Inter(
+                        fontSize: 23.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.greenColor,
+                      ),
+                    ),
                     title: Text(item.name),
-                    subtitle: Text('\$ ${item.price} x ${item.quantity}'),
+                    subtitle: Text('\$ ${item.price} x ${item.cartQuantity}'),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -70,7 +77,7 @@ class CartScreen extends StatelessWidget {
                       ),
                     ),
 
-                    if (cartController.discount.value > 0)
+                    if (cartController.discount.value > 0) ...[
                       CustomText(
                         text:
                             "Discount Amount: \$ ${cartController.discount.value.toStringAsFixed(2)}",
@@ -80,15 +87,16 @@ class CartScreen extends StatelessWidget {
                           color: AppColors.redColor,
                         ),
                       ),
-                    CustomText(
-                      text:
-                          "After Discount: \$ ${(cartController.total.value - cartController.discount.value).toStringAsFixed(2)}",
-                      style: CustomTextStyles.Inter(
-                        fontSize: 35.sp,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.greenColor,
+                      CustomText(
+                        text:
+                            "After Discount: \$ ${(cartController.total.value - cartController.discount.value).toStringAsFixed(2)}",
+                        style: CustomTextStyles.Inter(
+                          fontSize: 35.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.greenColor,
+                        ),
                       ),
-                    ),
+                    ],
 
                     08.sbh,
                     Center(

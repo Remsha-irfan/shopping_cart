@@ -17,7 +17,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(ProductModelAdapter());
-
+  await Hive.deleteBoxFromDisk('cartBox');
   Box<ProductModel> cartBox = await Hive.openBox<ProductModel>('cartBox');
 
   final productRemoteDataSource = ProductRemoteDataSource();
@@ -25,7 +25,12 @@ Future<void> main() async {
   final getAllProductsUseCase = GetAllProductsUseCase(productRepo);
 
   Get.put(ProductController(getAllProductsUseCase));
-  Get.put(CartController(cartLocalDataSource: CartLocalDataSource(cartBox)));
+  Get.put(
+    CartController(
+      cartLocalDataSource: CartLocalDataSource(cartBox),
+      getAllProductsUseCase: getAllProductsUseCase,
+    ),
+  );
   runApp(const MyApp());
 }
 

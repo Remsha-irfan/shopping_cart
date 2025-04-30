@@ -19,12 +19,15 @@ class ProductModel {
   @HiveField(4)
   final String description;
 
+  @HiveField(5)
+  int cartQuantity;
   ProductModel({
     required this.id,
     required this.name,
     required this.price,
     required this.quantity,
     required this.description,
+    this.cartQuantity = 0,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
@@ -42,4 +45,14 @@ class ProductModel {
     "quantity": quantity,
     "description": description,
   };
+  ProductModel copyWithCartQuantity(int value) {
+    return ProductModel(
+      id: id,
+      name: name,
+      price: price,
+      quantity: quantity,
+      description: description,
+      cartQuantity: value,
+    );
+  }
 }

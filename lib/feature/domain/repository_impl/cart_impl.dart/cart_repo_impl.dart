@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:shopping_cart/core/error.dart';
+import 'package:shopping_cart/core/error/error.dart';
 import 'package:shopping_cart/feature/data/data_source/cart_local_datasource.dart';
 import 'package:shopping_cart/feature/data/model/product_model.dart';
 import 'package:shopping_cart/feature/data/repository/cart_repo.dart';

@@ -1,163 +1,13 @@
+import 'dart:developer';
 import 'package:get/get.dart';
-import 'package:shopping_cart/core/error.dart';
+import 'package:shopping_cart/core/error/error.dart';
 import 'package:shopping_cart/feature/data/data_source/cart_local_datasource.dart';
+import 'package:shopping_cart/feature/domain/usecase/get_all_product_usecase.dart';
+import 'package:shopping_cart/feature/presentation/getx_controller/product_controller.dart';
 import '../../data/model/product_model.dart';
 
-// class CartController extends GetxController {
-//  final RxList<ProductModel> cartItems = <ProductModel>[].obs;
-// final RxBool isLoading = false.obs;
-// final RxString errorMessage = ''.obs;
-// final RxDouble scrollPosition = 0.0.obs;
-
-// final RxDouble total = 0.0.obs;
-// final RxDouble discount = 0.0.obs;
-
-//   final CartLocalDataSource cartLocalDataSource;
-
-//   CartController({required this.cartLocalDataSource});
-
-//   @override
-//   void onInit() {
-//     super.onInit();
-//     loadCartItems();
-//   }
-
-//   // Load cart items from local database
-//   void loadCartItems() async {
-//     try {
-//       isLoading.value = true;
-//       cartItems.value = await cartLocalDataSource.getCartItems();
-//     } catch (e) {
-//       errorMessage.value = handleFailure(e);
-//     } finally {
-//       isLoading.value = false;
-//     }
-//   }
-
-//   // // Add item to cart
-//   // void addToCart(ProductModel product) {
-//   //   try {
-//   //     bool exists = cartItems.any((item) => item.id == product.id);
-//   //     if (exists) {
-//   //       // Update quantity if already in cart
-//   //       ProductModel existingProduct = cartItems.firstWhere(
-//   //         (item) => item.id == product.id,
-//   //       );
-//   //       existingProduct.quantity += 1;
-//   //       cartLocalDataSource.saveCartItem(existingProduct);
-//   //     } else {
-//   //       // Add new product
-//   //       product.quantity = 1;
-//   //       cartLocalDataSource.saveCartItem(product);
-//   //       cartItems.add(product);
-//   //     }
-//   //   } catch (e) {
-//   //     errorMessage.value = handleFailure(e);
-//   //   }
-//   // }
-//   void addToCart(ProductModel product) {
-//     try {
-//       bool exists = cartItems.any((item) => item.id == product.id);
-//       if (exists) {
-//         // Update quantity if already in cart
-//         ProductModel existingProduct = cartItems.firstWhere(
-//           (item) => item.id == product.id,
-//         );
-//         existingProduct.quantity += 1; // Update quantity
-//         cartLocalDataSource.saveCartItem(existingProduct);
-//       } else {
-//         // Add new product
-//         product.quantity = 1; // Set initial quantity to 1
-//         cartLocalDataSource.saveCartItem(product);
-//         cartItems.add(product);
-//       }
-//     } catch (e) {
-//       errorMessage.value = handleFailure(e);
-//     }
-//   }
-
-//   // Remove item from cart
-//   void removeFromCart(ProductModel product) {
-//     try {
-//       cartItems.remove(product);
-//       cartLocalDataSource.deleteCartItem(product.id);
-//     } catch (e) {
-//       errorMessage.value = handleFailure(e);
-//     }
-//   }
-
-//   // Increase quantity
-//   void increaseQuantity(ProductModel product) {
-//     try {
-//       product.quantity += 1;
-//       cartLocalDataSource.saveCartItem(product);
-//       loadCartItems(); // Reload the cart items to reflect changes
-//     } catch (e) {
-//       errorMessage.value = handleFailure(e);
-//     }
-//   }
-
-//   // Decrease quantity
-//   void decreaseQuantity(ProductModel product) {
-//     try {
-//       if (product.quantity > 1) {
-//         product.quantity -= 1;
-//         cartLocalDataSource.saveCartItem(product);
-//         loadCartItems(); // Reload the cart items to reflect changes
-//       }
-//     } catch (e) {
-//       errorMessage.value = handleFailure(e);
-//     }
-//   }
-
-//   // Calculate total price
-//   double get total {
-//     return cartItems.fold(
-//       0,
-//       (total, item) => total + (item.price * item.quantity),
-//     );
-//   }
-
-//   // Calculate discount if total exceeds 500
-//   double get discount {
-//     return total > 500 ? total * 0.10 : 0.0;
-//   }
-
-//   // Place an order (dummy implementation)
-//   void placeOrder() {
-//     try {
-//       // You can add API call or order logic here
-//       cartItems.clear();
-//       cartLocalDataSource.saveCartItem(
-//         ProductModel(
-//           id: -1,
-//           name: "Dummy Product",
-//           price: 0,
-//           quantity: 0,
-//           description: "",
-//         ),
-//       );
-//     } catch (e) {
-//       errorMessage.value = handleFailure(e);
-//     }
-//   }
-
-//   String handleFailure(Object e) {
-//     if (e is Failure) {
-//       // If it's a Failure (GeneralFailure, DataParsingFailure, etc.), return the message.
-//       return e.message;
-//     } else if (e is Exception) {
-//       // If it's a general exception, return a generic message for exception types.
-//       return "An unexpected error occurred";
-//     } else {
-//       // For other types of errors (non-Exception errors), return a different message.
-//       return "An unknown error occurred";
-//     }
-//   }
-// }
-
 class CartController extends GetxController {
-  final RxList<ProductModel> cartItems = <ProductModel>[].obs;
+  final RxList<ProductModel> productList = <ProductModel>[].obs;
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
   final RxDouble scrollPosition = 0.0.obs;
@@ -166,21 +16,29 @@ class CartController extends GetxController {
   final RxDouble discount = 0.0.obs;
 
   final CartLocalDataSource cartLocalDataSource;
+  final GetAllProductsUseCase getAllProductsUseCase;
 
-  CartController({required this.cartLocalDataSource});
+  CartController({
+    required this.cartLocalDataSource,
+    required this.getAllProductsUseCase,
+  });
 
   @override
   void onInit() {
     super.onInit();
     loadCartItems();
-    ever(cartItems, (_) => _calculateTotals()); // auto update total/discount
+    ever(productList, (_) => _calculateTotals()); // auto update total/discount
   }
 
   // Load cart items from local database
   void loadCartItems() async {
     try {
       isLoading.value = true;
-      cartItems.value = await cartLocalDataSource.getCartItems();
+
+      var items = await cartLocalDataSource.getCartItems();
+
+      productList.value = items;
+
       _calculateTotals();
     } catch (e) {
       errorMessage.value = handleFailure(e);
@@ -191,28 +49,49 @@ class CartController extends GetxController {
 
   void _calculateTotals() {
     double tempTotal = 0.0;
-    for (var item in cartItems) {
-      tempTotal += item.price * item.quantity;
+    for (var item in productList) {
+      tempTotal += item.price * item.cartQuantity;
     }
     total.value = tempTotal;
     discount.value = tempTotal > 500 ? tempTotal * 0.10 : 0.0;
   }
 
+  // void addToCart(ProductModel product) {
+  //   try {
+  //     bool exists = productList.any((item) => item.id == product.id);
+  //     if (exists) {
+  //       ProductModel existingProduct = productList.firstWhere(
+  //         (item) => item.id == product.id,
+  //       );
+  //       existingProduct.quantity += 1;
+  //       cartLocalDataSource.saveCartItem(existingProduct);
+  //     } else {
+  //       product.quantity = 1;
+  //       cartLocalDataSource.saveCartItem(product);
+  //       productList.add(product);
+  //     }
+  //     productList.refresh();
+  //     _calculateTotals();
+  //   } catch (e) {
+  //     errorMessage.value = handleFailure(e);
+  //   }
+  // }
+
   void addToCart(ProductModel product) {
     try {
-      bool exists = cartItems.any((item) => item.id == product.id);
+      bool exists = productList.any((item) => item.id == product.id);
       if (exists) {
-        ProductModel existingProduct = cartItems.firstWhere(
+        ProductModel existingProduct = productList.firstWhere(
           (item) => item.id == product.id,
         );
-        existingProduct.quantity += 1;
+        existingProduct.cartQuantity += 1;
         cartLocalDataSource.saveCartItem(existingProduct);
       } else {
-        product.quantity = 1;
+        product.cartQuantity = 1;
         cartLocalDataSource.saveCartItem(product);
-        cartItems.add(product);
+        productList.add(product);
       }
-      cartItems.refresh();
+      productList.refresh();
       _calculateTotals();
     } catch (e) {
       errorMessage.value = handleFailure(e);
@@ -221,7 +100,7 @@ class CartController extends GetxController {
 
   void removeFromCart(ProductModel product) {
     try {
-      cartItems.remove(product);
+      productList.remove(product);
       cartLocalDataSource.deleteCartItem(product.id);
       _calculateTotals();
     } catch (e) {
@@ -231,9 +110,9 @@ class CartController extends GetxController {
 
   void increaseQuantity(ProductModel product) {
     try {
-      product.quantity += 1;
+      product.cartQuantity += 1;
       cartLocalDataSource.saveCartItem(product);
-      cartItems.refresh();
+      productList.refresh();
       _calculateTotals();
     } catch (e) {
       errorMessage.value = handleFailure(e);
@@ -242,29 +121,71 @@ class CartController extends GetxController {
 
   void decreaseQuantity(ProductModel product) {
     try {
-      if (product.quantity > 1) {
-        product.quantity -= 1;
+      if (product.cartQuantity > 1) {
+        product.cartQuantity -= 1;
+
         cartLocalDataSource.saveCartItem(product);
       } else {
-        cartItems.removeWhere((item) => item.id == product.id);
+        productList.removeWhere((item) => item.id == product.id);
         cartLocalDataSource.deleteCartItem(product.id);
       }
-      cartItems.refresh();
+      productList.refresh();
       _calculateTotals();
     } catch (e) {
       errorMessage.value = handleFailure(e);
     }
   }
 
-  void placeOrder() {
+  // void placeOrder() {
+  //   try {
+  //     for (var item in cartItems) {
+  //       cartLocalDataSource.deleteCartItem(item.id);
+  //     }
+  //     cartItems.clear();
+  //     _calculateTotals();
+  //   } catch (e) {
+  //     errorMessage.value = handleFailure(e);
+  //   }
+  // }
+
+  //
+
+  void placeOrder() async {
     try {
-      for (var item in cartItems) {
-        cartLocalDataSource.deleteCartItem(item.id);
+      isLoading.value = true;
+
+      for (var item in productList) {
+        // 🔄 Reduce stock quantity by cart quantity
+        item.quantity -= item.cartQuantity;
+
+        log(
+          "🛒 Product: ${item.name}, Stock after purchase: ${item.quantity}, Purchased: ${item.cartQuantity}",
+        );
+
+        // Reset cartQuantity after purchase
+        item.cartQuantity = 0;
+
+        // ✅ Update local DB with new stock
+        await cartLocalDataSource.saveCartItem(item);
+
+        // 🗑️ Remove product from cart (optional: you could filter by cartQuantity == 0 later)
+        await cartLocalDataSource.deleteCartItem(item.id);
+
+        log("✅ ${item.name} updated & removed from cart");
       }
-      cartItems.clear();
+
+      // 🧹 Clear cart list and totals
+      productList.clear();
       _calculateTotals();
+
+      Get.find<ProductController>().loadProducts();
+
+      // ✅ Navigate to confirmation screen
+      Get.offNamed('/confirmation');
     } catch (e) {
       errorMessage.value = handleFailure(e);
+    } finally {
+      isLoading.value = false;
     }
   }
 

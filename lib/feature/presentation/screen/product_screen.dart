@@ -41,6 +41,7 @@ class ProductListScreen extends StatelessWidget {
           separatorBuilder: (_, __) => SizedBox(height: 12.h),
           itemBuilder: (context, index) {
             final product = productController.productList[index];
+
             return Card(
               elevation: 4,
               shape: RoundedRectangleBorder(
@@ -104,13 +105,30 @@ class ProductListScreen extends StatelessWidget {
                     8.sbw,
                     ElevatedButton(
                       onPressed: () {
-                        cartController.addToCart(product);
-                        Get.snackbar(
-                          "Cart",
-                          "${product.name} added to cart!",
-                          snackPosition: SnackPosition.BOTTOM,
-                          duration: Duration(seconds: 2),
-                        );
+                        if (product.quantity > 0) {
+                          print(product.quantity);
+                          cartController.addToCart(product);
+                          Get.snackbar(
+                            "Cart",
+                            "${product.name} added to cart!",
+                            snackPosition: SnackPosition.BOTTOM,
+                            duration: Duration(seconds: 2),
+                          );
+                        } else {
+                          Get.snackbar(
+                            "Out of Stock",
+                            "${product.name} is out of stock!",
+                            snackPosition: SnackPosition.BOTTOM,
+                            duration: Duration(seconds: 2),
+                          );
+                        }
+                        // cartController.addToCart(product);
+                        // Get.snackbar(
+                        //   "Cart",
+                        //   "${product.name} added to cart!",
+                        //   snackPosition: SnackPosition.BOTTOM,
+                        //   duration: Duration(seconds: 2),
+                        // );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.appColor,

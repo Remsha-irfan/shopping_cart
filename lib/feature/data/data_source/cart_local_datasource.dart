@@ -8,7 +8,20 @@ class CartLocalDataSource {
 
   // Save item to cart
   Future<void> saveCartItem(ProductModel product) async {
-    await _cartBox.put(product.id, product);
+    // Get the current product from Hive (if exists)
+    ProductModel? existingProduct = _cartBox.get(product.id);
+
+    if (existingProduct != null) {
+      // Update the quantity if product already exists
+      existingProduct.quantity = product.quantity;
+      await _cartBox.put(
+        product.id,
+        existingProduct,
+      ); // Overwrite the existing product with updated quantity
+    } else {
+      // Add new product if it doesn't exist
+      await _cartBox.put(product.id, product);
+    }
   }
 
   // Get cart items from Hive
