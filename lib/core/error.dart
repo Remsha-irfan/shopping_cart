@@ -3,6 +3,10 @@ abstract class Failure {
   Failure(this.message);
 }
 
+class GeneralFailure extends Failure {
+  GeneralFailure(String message) : super(message);
+}
+
 class DataParsingFailure extends Failure {
   DataParsingFailure(String message) : super(message);
 }
