@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:shopping_cart/core/error/error.dart';
 import 'package:shopping_cart/feature/data/data_source/cart_local_datasource.dart';
@@ -12,22 +13,34 @@ class CartController extends GetxController {
   final RxString errorMessage = ''.obs;
   final RxDouble scrollPosition = 0.0.obs;
 
+  late ScrollController scrollController;
   final RxDouble total = 0.0.obs;
   final RxDouble discount = 0.0.obs;
 
   final CartLocalDataSource cartLocalDataSource;
   final GetAllProductsUseCase getAllProductsUseCase;
-
-  CartController({
+  CartController(
+    this.getAllProductsUseCase, {
     required this.cartLocalDataSource,
-    required this.getAllProductsUseCase,
   });
 
   @override
   void onInit() {
     super.onInit();
     loadCartItems();
-    ever(productList, (_) => _calculateTotals()); // auto update total/discount
+    // ever(productList, (_) => _calculateTotals()); // auto update total/discount
+    scrollController = ScrollController();
+    ever(productList, (_) {
+      _calculateTotals();
+      Future.delayed(Duration(milliseconds: 100), () {
+        scrollController.jumpTo(scrollPosition.value);
+      });
+    });
+
+    // Save current scroll position as user scrolls
+    scrollController.addListener(() {
+      scrollPosition.value = scrollController.position.pixels;
+    });
   }
 
   // Load cart items from local database
@@ -41,7 +54,7 @@ class CartController extends GetxController {
 
       _calculateTotals();
     } catch (e) {
-      errorMessage.value = handleFailure(e);
+      errorMessage.value = GeneralFailure(e.toString()).message;
     } finally {
       isLoading.value = false;
     }
@@ -55,27 +68,6 @@ class CartController extends GetxController {
     total.value = tempTotal;
     discount.value = tempTotal > 500 ? tempTotal * 0.10 : 0.0;
   }
-
-  // void addToCart(ProductModel product) {
-  //   try {
-  //     bool exists = productList.any((item) => item.id == product.id);
-  //     if (exists) {
-  //       ProductModel existingProduct = productList.firstWhere(
-  //         (item) => item.id == product.id,
-  //       );
-  //       existingProduct.quantity += 1;
-  //       cartLocalDataSource.saveCartItem(existingProduct);
-  //     } else {
-  //       product.quantity = 1;
-  //       cartLocalDataSource.saveCartItem(product);
-  //       productList.add(product);
-  //     }
-  //     productList.refresh();
-  //     _calculateTotals();
-  //   } catch (e) {
-  //     errorMessage.value = handleFailure(e);
-  //   }
-  // }
 
   void addToCart(ProductModel product) {
     try {
@@ -94,7 +86,7 @@ class CartController extends GetxController {
       productList.refresh();
       _calculateTotals();
     } catch (e) {
-      errorMessage.value = handleFailure(e);
+      errorMessage.value = GeneralFailure(e.toString()).message;
     }
   }
 
@@ -104,7 +96,7 @@ class CartController extends GetxController {
       cartLocalDataSource.deleteCartItem(product.id);
       _calculateTotals();
     } catch (e) {
-      errorMessage.value = handleFailure(e);
+      errorMessage.value = GeneralFailure(e.toString()).message;
     }
   }
 
@@ -115,7 +107,7 @@ class CartController extends GetxController {
       productList.refresh();
       _calculateTotals();
     } catch (e) {
-      errorMessage.value = handleFailure(e);
+      errorMessage.value = GeneralFailure(e.toString()).message;
     }
   }
 
@@ -132,23 +124,9 @@ class CartController extends GetxController {
       productList.refresh();
       _calculateTotals();
     } catch (e) {
-      errorMessage.value = handleFailure(e);
+      errorMessage.value = GeneralFailure(e.toString()).message;
     }
   }
-
-  // void placeOrder() {
-  //   try {
-  //     for (var item in cartItems) {
-  //       cartLocalDataSource.deleteCartItem(item.id);
-  //     }
-  //     cartItems.clear();
-  //     _calculateTotals();
-  //   } catch (e) {
-  //     errorMessage.value = handleFailure(e);
-  //   }
-  // }
-
-  //
 
   void placeOrder() async {
     try {
@@ -174,7 +152,6 @@ class CartController extends GetxController {
         log("✅ ${item.name} updated & removed from cart");
       }
 
-      // 🧹 Clear cart list and totals
       productList.clear();
       _calculateTotals();
 
@@ -183,19 +160,9 @@ class CartController extends GetxController {
       // ✅ Navigate to confirmation screen
       Get.offNamed('/confirmation');
     } catch (e) {
-      errorMessage.value = handleFailure(e);
+      errorMessage.value = GeneralFailure(e.toString()).message;
     } finally {
       isLoading.value = false;
-    }
-  }
-
-  String handleFailure(Object e) {
-    if (e is Failure) {
-      return e.message;
-    } else if (e is Exception) {
-      return "An unexpected error occurred";
-    } else {
-      return "An unknown error occurred";
     }
   }
 }

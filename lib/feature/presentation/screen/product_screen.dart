@@ -7,6 +7,7 @@ import 'package:shopping_cart/core/common_widget/sized_box.dart';
 import 'package:shopping_cart/core/constant/colors.dart';
 import 'package:shopping_cart/feature/presentation/getx_controller/product_controller.dart';
 import 'package:shopping_cart/feature/presentation/getx_controller/cart_controller.dart';
+import 'package:shopping_cart/feature/presentation/screen/widget/app_bar_widget.dart';
 
 class ProductListScreen extends StatelessWidget {
   const ProductListScreen({super.key});
@@ -17,15 +18,8 @@ class ProductListScreen extends StatelessWidget {
     final cartController = Get.find<CartController>();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("All Products"),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.shopping_cart),
-            onPressed: () => Get.toNamed('/cart'),
-          ),
-        ],
-      ),
+      appBar: ProductAppBar(),
+
       body: Obx(() {
         if (productController.isLoading.value) {
           return Center(child: CircularProgressIndicator());
@@ -106,7 +100,6 @@ class ProductListScreen extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {
                         if (product.quantity > 0) {
-                          print(product.quantity);
                           cartController.addToCart(product);
                           Get.snackbar(
                             "Cart",
@@ -114,6 +107,7 @@ class ProductListScreen extends StatelessWidget {
                             snackPosition: SnackPosition.BOTTOM,
                             duration: Duration(seconds: 2),
                           );
+                          Get.toNamed('/cart');
                         } else {
                           Get.snackbar(
                             "Out of Stock",
@@ -122,13 +116,6 @@ class ProductListScreen extends StatelessWidget {
                             duration: Duration(seconds: 2),
                           );
                         }
-                        // cartController.addToCart(product);
-                        // Get.snackbar(
-                        //   "Cart",
-                        //   "${product.name} added to cart!",
-                        //   snackPosition: SnackPosition.BOTTOM,
-                        //   duration: Duration(seconds: 2),
-                        // );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.appColor,
@@ -136,7 +123,6 @@ class ProductListScreen extends StatelessWidget {
                           horizontal: 12.w,
                           vertical: 8.h,
                         ),
-                        // textStyle: TextStyle(fontSize: 25.sp),
                       ),
                       child: CustomText(
                         text: "Add",

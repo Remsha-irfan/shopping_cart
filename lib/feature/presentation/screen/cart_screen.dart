@@ -9,36 +9,45 @@ import 'package:shopping_cart/feature/presentation/getx_controller/cart_controll
 
 class CartScreen extends StatelessWidget {
   final cartController = Get.find<CartController>();
-  final ScrollController _scrollController = ScrollController();
+  // final ScrollController _scrollController = ScrollController();
 
   CartScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Cart")),
+      appBar: AppBar(
+        title: CustomText(
+          text: "Your Cart",
+          style: CustomTextStyles.Inter(
+            fontWeight: FontWeight.bold,
+            color: AppColors.blackColor,
+          ),
+        ),
+      ),
       body: Obx(() {
         if (cartController.productList.isEmpty) {
-          return Center(child: Text("Cart is empty"));
+          return Center(
+            child: CustomText(
+              text: "Cart is Empty",
+              style: CustomTextStyles.Inter(
+                fontSize: 40.sp,
+                fontWeight: FontWeight.bold,
+                color: AppColors.blackColor,
+              ),
+            ),
+          );
         }
 
         return Column(
           children: [
             Expanded(
               child: ListView.builder(
+                controller: cartController.scrollController,
                 itemCount: cartController.productList.length,
-                controller: _scrollController,
                 itemBuilder: (context, index) {
                   final item = cartController.productList[index];
                   return ListTile(
-                    leading: CustomText(
-                      text: "Remaining ${item.quantity}",
-                      style: CustomTextStyles.Inter(
-                        fontSize: 23.sp,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.greenColor,
-                      ),
-                    ),
                     title: Text(item.name),
                     subtitle: Text('\$ ${item.price} x ${item.cartQuantity}'),
                     trailing: Row(
@@ -104,7 +113,7 @@ class CartScreen extends StatelessWidget {
                         onPressed: () {
                           try {
                             cartController.placeOrder();
-                            Get.offNamed('/confirmation');
+                            Get.offAllNamed('/confirmation');
                           } catch (e) {
                             Get.snackbar(
                               "Error",
@@ -118,7 +127,6 @@ class CartScreen extends StatelessWidget {
                             horizontal: 62.w,
                             vertical: 15.h,
                           ),
-                          // textStyle: TextStyle(fontSize: 25.sp),
                         ),
                         child: CustomText(
                           text: "Place Order",

@@ -4,13 +4,9 @@ abstract class Failure {
 }
 
 class GeneralFailure extends Failure {
-  GeneralFailure(String message) : super(message);
+  GeneralFailure(super.message);
 }
 
 class DataParsingFailure extends Failure {
-  DataParsingFailure(String message) : super(message);
-}
-
-class FileNotFoundFailure extends Failure {
-  FileNotFoundFailure(String message) : super(message);
+  DataParsingFailure(super.message);
 }

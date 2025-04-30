@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:shopping_cart/core/common_widget/custom_text.dart';
 import 'package:shopping_cart/core/common_widget/custom_text_style.dart';
 import 'package:shopping_cart/core/common_widget/sized_box.dart';
@@ -11,7 +12,10 @@ class OrderConfirmationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Order Placed")),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text("Order Placed"),
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -24,6 +28,24 @@ class OrderConfirmationScreen extends StatelessWidget {
                 fontSize: 50.sp,
                 fontWeight: FontWeight.bold,
                 color: AppColors.blackColor,
+              ),
+            ),
+            180.sbh,
+            ElevatedButton(
+              onPressed: () {
+                Get.offAllNamed('/');
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.appColor,
+                padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 12.h),
+              ),
+              child: CustomText(
+                text: "Go to Home",
+                style: CustomTextStyles.Inter(
+                  fontSize: 50.sp,
+                  color: AppColors.whiteColor,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ],

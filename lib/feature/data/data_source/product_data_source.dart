@@ -1,18 +1,3 @@
-// import 'dart:convert';
-// import 'dart:developer';
-// import 'dart:io';
-// import 'package:flutter/services.dart';
-// import 'package:shopping_cart/feature/data/model/product_model.dart';
-// import 'package:path_provider/path_provider.dart';
-
-// class ProductRemoteDataSource {
-//   // Load products from the assets JSON file
-//   Future<List<ProductModel>> loadProductsFromJson() async {
-//     final String response = await rootBundle.loadString('assets/products.json');
-//     final List<dynamic> data = json.decode(response);
-//     return data.map((item) => ProductModel.fromJson(item)).toList();
-//   }
-// }
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';

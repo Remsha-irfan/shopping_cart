@@ -15,9 +15,7 @@ class CartRepositoryImpl implements CartRepository {
       final result = await localDataSource.getCartItems();
       return Right(result);
     } catch (e) {
-      return Left(
-        DataParsingFailure('Failed to load cart items: ${e.toString()}'),
-      );
+      return Left(GeneralFailure('Failed to load cart items: ${e.toString()}'));
     }
   }
 
